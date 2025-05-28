@@ -17,17 +17,14 @@ closeBtn.addEventListener("click", closeModal);
 function launchModal() {
   modalbg.style.display = "block";
 }
-// affiche la boîte modale quand on clique sur “je m’inscris”
 
 function closeModal() {
   modalbg.style.display = "none";
 }
-// masque la boîte modale quand on clique sur la croix ou “Fermer”
 
 function validate() {
   let isValid = true;
 
-  // on efface d’abord tous les messages d’erreur visibles
   document.querySelectorAll(".formData").forEach((sec) => {
     sec.removeAttribute("data-error");
     sec.setAttribute("data-error-visible", "false");
