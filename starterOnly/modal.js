@@ -32,11 +32,16 @@ function validate() {
 
   // Prénom (min 2 caractères)
   const first = document.getElementById("first");
-  if (!first.value || first.value.trim().length < 2) {
+  const nameRe = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+  if (
+    !first.value ||
+    first.value.trim().length < 2 ||
+    !nameRe.test(first.value)
+  ) {
     const sec = first.closest(".formData");
     sec.setAttribute(
       "data-error",
-      "Veuillez entrer 2 caractères ou plus pour le prénom."
+      "Veuillez entrer un prénom valide (2 caractères minimum, lettres uniquement)."
     );
     sec.setAttribute("data-error-visible", "true");
     isValid = false;
@@ -44,11 +49,11 @@ function validate() {
 
   // Nom (min 2 caractères)
   const last = document.getElementById("last");
-  if (!last.value || last.value.trim().length < 2) {
+  if (!last.value || last.value.trim().length < 2 || !nameRe.test(last.value)) {
     const sec = last.closest(".formData");
     sec.setAttribute(
       "data-error",
-      "Veuillez entrer 2 caractères ou plus pour le nom."
+      "Veuillez entrer un nom valide (2 caractères minimum, lettres uniquement)."
     );
     sec.setAttribute("data-error-visible", "true");
     isValid = false;
