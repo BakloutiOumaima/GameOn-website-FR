@@ -14,12 +14,24 @@ const closeBtn = document.querySelector(".close");
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 closeBtn.addEventListener("click", closeModal);
 
+// On mémorise le contenu initial de la modale pour pouvoir le restaurer
+const modalBody = document.querySelector(".modal-body");
+const initialModalHTML = modalBody ? modalBody.innerHTML : "";
+
+// Sélecteur robuste du formulaire (adapte si tu as un id spécifique)
+const form =
+  document.querySelector(".modal-body form") || document.querySelector("form");
+
 function launchModal() {
   modalbg.style.display = "block";
 }
 
 function closeModal() {
   modalbg.style.display = "none";
+  // À chaque fermeture, on rétablit le formulaire visible
+  if (modalBody && initialModalHTML) {
+    modalBody.innerHTML = initialModalHTML;
+  }
 }
 
 function validate() {
@@ -30,13 +42,13 @@ function validate() {
     sec.setAttribute("data-error-visible", "false");
   });
 
-  // Prénom (min 2 caractères)
+  // Prénom (min 2 caractères et lettres uniquement)
   const first = document.getElementById("first");
   const nameRe = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
   if (
     !first.value ||
     first.value.trim().length < 2 ||
-    !nameRe.test(first.value)
+    !nameRe.test(first.value.trim())
   ) {
     const sec = first.closest(".formData");
     sec.setAttribute(
@@ -47,9 +59,13 @@ function validate() {
     isValid = false;
   }
 
-  // Nom (min 2 caractères)
+  // Nom (min 2 caractères et lettres uniquement)
   const last = document.getElementById("last");
-  if (!last.value || last.value.trim().length < 2 || !nameRe.test(last.value)) {
+  if (
+    !last.value ||
+    last.value.trim().length < 2 ||
+    !nameRe.test(last.value.trim())
+  ) {
     const sec = last.closest(".formData");
     sec.setAttribute(
       "data-error",
@@ -114,13 +130,20 @@ function validate() {
 
   // Si tout est validé, on affiche le message de succès
   if (isValid) {
-    const modalBody = document.querySelector(".modal-body");
-    modalBody.innerHTML = `
-      <p class="thank-you">Merci pour votre inscription</p>
-      <button id="btn-close" class="btn-submit">Fermer</button>
-    `;
-    // ajoute le bouton Fermer et son événement après validation
-    document.getElementById("btn-close").addEventListener("click", closeModal);
+    // 1) Nettoyer tous les champs immédiatement
+    if (form) form.reset();
+
+    // 2) Afficher le message de remerciement
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <p class="thank-you">Merci pour votre inscription</p>
+        <button id="btn-close" class="btn-submit">Fermer</button>
+      `;
+      // 3) Au clic sur Fermer : fermer et rétablir le formulaire vierge
+      document.getElementById("btn-close").addEventListener("click", () => {
+        closeModal(); // closeModal rétablit déjà initialModalHTML + masque la modale
+      });
+    }
   }
 
   return false; // empêche le navigateur de recharger la page
