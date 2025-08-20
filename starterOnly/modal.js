@@ -18,7 +18,7 @@ closeBtn.addEventListener("click", closeModal);
 const modalBody = document.querySelector(".modal-body");
 const initialModalHTML = modalBody ? modalBody.innerHTML : "";
 
-// Sélecteur robuste du formulaire (adapte si tu as un id spécifique)
+// Sélecteur du formulaire
 const form =
   document.querySelector(".modal-body form") || document.querySelector("form");
 
