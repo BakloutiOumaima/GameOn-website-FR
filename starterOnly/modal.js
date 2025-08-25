@@ -22,6 +22,9 @@ const initialModalHTML = modalBody ? modalBody.innerHTML : "";
 const form =
   document.querySelector(".modal-body form") || document.querySelector("form");
 
+// ⬇️ AJOUT : indicateur pour savoir si on doit restaurer le HTML initial lors de la fermeture
+let shouldRestoreOnClose = false;
+
 function launchModal() {
   modalbg.style.display = "block";
 }
@@ -29,8 +32,9 @@ function launchModal() {
 function closeModal() {
   modalbg.style.display = "none";
   // À chaque fermeture, on rétablit le formulaire visible
-  if (modalBody && initialModalHTML) {
+  if (modalBody && initialModalHTML && shouldRestoreOnClose) {
     modalBody.innerHTML = initialModalHTML;
+    shouldRestoreOnClose = false;
   }
 }
 
@@ -141,6 +145,7 @@ function validate() {
       `;
       // 3) Au clic sur Fermer : fermer et rétablir le formulaire vierge
       document.getElementById("btn-close").addEventListener("click", () => {
+        shouldRestoreOnClose = true;
         closeModal(); // closeModal rétablit déjà initialModalHTML + masque la modale
       });
     }
